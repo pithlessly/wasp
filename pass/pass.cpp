@@ -107,7 +107,7 @@ namespace {
         indices[1] = llvm::ConstantInt::get(ctx, llvm::APInt(32, i++, true));
         auto ptr = builder.CreateGEP(arg_struct_type, args, indices);
         if (arg.getType()->isPointerTy()) {
-          builder.CreateStore(builder.CreateLoad(&arg), ptr);
+          builder.CreateStore(builder.CreateLoad(ptr->getType(), &arg), ptr);
         } else {
           builder.CreateStore(&arg, ptr);
         }
@@ -207,7 +207,7 @@ namespace {
           indices[0] = llvm::ConstantInt::get(ctx, llvm::APInt(32, 0, true));
           indices[1] = llvm::ConstantInt::get(ctx, llvm::APInt(32, ind, true));
           auto ptr = builder.CreateGEP(arg_struct_type, args, indices);
-          auto val = builder.CreateLoad(ptr);
+          auto val = builder.CreateLoad(ptr->getType(), ptr);
           builder.CreateStore(val, &arg);
         }
       }
@@ -222,7 +222,7 @@ namespace {
         indices[1] = llvm::ConstantInt::get(ctx, llvm::APInt(32, fn.arg_size(), true));
         auto ptr = builder.CreateGEP(arg_struct_type, args, indices);
 
-        return_value = builder.CreateLoad(ptr);
+        return_value = builder.CreateLoad(ptr->getType(), ptr);
       }
 
       builder.CreateRet(return_value);

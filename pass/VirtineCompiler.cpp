@@ -153,7 +153,7 @@ llvm::Function *VirtineCompiler::create_main(llvm::Function &source) {
       indices.push_back(llvm::ConstantInt::get(ctx, llvm::APInt(32, i++, true)));
 
       auto ptr = builder.CreateGEP(argtype, virtine_args, indices);
-      argv.push_back(builder.CreateLoad(ptr));
+      argv.push_back(builder.CreateLoad(ptr->getType(), ptr));
     }
   }
 
