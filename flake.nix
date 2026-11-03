@@ -15,7 +15,7 @@
         pkgs-old = nixpkgs-old.legacyPackages.${system};
       in import ./shell.nix {
         inherit pkgs;
-        llvm = pkgs-old.llvmPackages_14.llvm;
+        inherit (pkgs-old.llvmPackages_14) llvm libclang;
       }
     );
   };

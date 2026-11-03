@@ -1,14 +1,19 @@
-{ pkgs ? import <nixpkgs> {}
-, cmake ? pkgs.cmake
-, curl ? pkgs.curl
-, nasm ? pkgs.nasm
-, llvm ? pkgs.llvm # right now needs LLVM <17
+{ pkgs     ? import <nixpkgs> {}
+, cmake    ? pkgs.cmake
+, curl     ? pkgs.curl
+, nasm     ? pkgs.nasm
+, libxml2  ? pkgs.libxml2
+  # right now needs LLVM 14-16
+, llvm     ? pkgs.llvm
+, libclang ? pkgs.libclang
 }:
 pkgs.mkShell {
   packages = [
     cmake
-    llvm
-    nasm
     curl
+    nasm
+    libxml2
+    llvm
+    libclang
   ];
 }
