@@ -22,7 +22,7 @@
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/raw_ostream.h"
-#include "llvm/Transforms/IPO/PassManagerBuilder.h"
+// #include "llvm/Transforms/IPO/PassManagerBuilder.h"
 #include "llvm/Transforms/Utils/Cloning.h"
 #include "llvm/Transforms/Utils/ValueMapper.h"
 
@@ -57,7 +57,7 @@ namespace {
 
       for (auto &fn : m) {
         auto section = fn.getSection();
-        if (section.startswith("$__VIRTINE__")) {
+        if (section.starts_with("$__VIRTINE__")) {
           functionSections[&fn] = section;
           fn.setSection("");
           virtines.push_back(&fn);
@@ -95,7 +95,7 @@ namespace {
       builder.SetInsertPoint(bb);
 
 
-      auto argptr = llvm::PointerType::get(arg_struct_type, 0);
+      auto argptr = llvm::PointerType::get(arg_struct_type->getContext(), 0);
 
       auto args = builder.CreateAlloca(arg_struct_type);
       args->setName("argument_struct");
@@ -118,7 +118,7 @@ namespace {
        * now we need to get the wasp library function to call
        */
       auto chartype = llvm::IntegerType::get(ctx, 8);
-      auto charptr_type = llvm::PointerType::get(chartype, 0);
+      auto charptr_type = llvm::PointerType::get(chartype->getContext(), 0);
       auto size_t_type = llvm::IntegerType::get(ctx, 64);
 
       llvm::Function *wasp_run_func = mod->getFunction("wasp_run_virtine");
@@ -177,7 +177,7 @@ namespace {
         // to index 1, and casting that value to an int. This effectively
         // means we have the address of the second struct in memory (the size
         // of the first)
-        auto NULL_PTR = llvm::ConstantPointerNull::get(llvm::PointerType::get(arg_struct_type, 0));
+        auto NULL_PTR = llvm::ConstantPointerNull::get(llvm::PointerType::get(arg_struct_type->getContext(), 0));
         auto size_ptr = builder.CreateGEP(arg_struct_type, NULL_PTR, llvm::ConstantInt::get(ctx, llvm::APInt(32, 1, true)), "size_hack");
         auto size = builder.CreatePtrToInt(size_ptr, size_t_type, "size");
         argv.push_back(size);
@@ -185,7 +185,7 @@ namespace {
 
         llvm::Value *config = llvm::ConstantPointerNull::get(charptr_type);
 
-        if (section.startswith("$__VIRTINE__cfg=")) {
+        if (section.starts_with("$__VIRTINE__cfg=")) {
           // printf("this one has a config...\n");
           auto s = section.slice(strlen("$__VIRTINE__cfg="), section.size());
           // printf("s: %s\n", s.data());
