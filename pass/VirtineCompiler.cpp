@@ -90,10 +90,12 @@ bool VirtineCompiler::single_dead_code_pass(llvm::Function &root) {
   for (auto &arg : fn.args()) {
     auto *t = arg.getType();
 
+	/*
     if (surrogate && t->isPointerTy()) {
       auto *ptr = (llvm::PointerType *)t;
       t = ptr->getElementType();
     }
+    */
     arg_types.push_back(t);
   }
   // the last field is the return value
@@ -107,7 +109,7 @@ bool VirtineCompiler::single_dead_code_pass(llvm::Function &root) {
 
 llvm::Function *VirtineCompiler::create_main(llvm::Function &source) {
   auto argtype = create_argument_struct(func(), true);
-  auto argtype_ptr = llvm::PointerType::get(argtype, 0);
+  auto argtype_ptr = llvm::PointerType::get(argtype->getContext(), 0);
 
   auto &ctx = func().getContext();
   auto *mod = func().getParent();
