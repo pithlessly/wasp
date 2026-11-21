@@ -29,11 +29,11 @@ Our first option is updating the compiler extension to the newest version of LLV
 
 ### Option B: [Migrate to MLIR]
 
-We can migrate the Wasp hypervisor compiler extension to MLIR, which is widely considered to be the successor to LLVM. This would provide the team with a very high familiarity with the internals of Wasp, as they will have re-developed everything, but it would be correspondingly difficult. This may be the better choice for future support though, as developers continue to migrate tools away from LLVM and towards MLIR.
+We can migrate the Wasp hypervisor compiler extension to MLIR, which is widely considered to be the successor to LLVM IR (e.g., as seen in the section "Why MLIR?" of [1]). This would provide the team with a very high familiarity with the internals of Wasp, as they will have re-developed everything, but it would be correspondingly difficult. This may be the better choice for future support though, as developers continue to migrate tools away from LLVM and towards MLIR.
 
 ### Option C: Do Nothing
 
-If we do not update the compiler extension, Wasp, and by extension virtines, may not behave well with newer development environments that user newer versions of LLVM (or ones that have migrated from LLVM to MLIR). Migrating to MLIR and updating to newer versions of LLVM will also become increasingly difficult as time goes on and versions differ more and more.
+If we do not update the compiler extension, Wasp, and by extension virtines, may not behave well with newer development environments that use newer versions of LLVM (or ones that have migrated from LLVM to MLIR). Migrating to MLIR and updating to newer versions of LLVM will also become increasingly difficult as time goes on and versions differ more and more.
 
 ## Analysis
 
@@ -42,6 +42,8 @@ Migrating to MLIR definitively has the highest up-front complexity, but may redu
 ## Recommendation and Verification Plan
 
 We propose updating to a newer version of LLVM, as it would give the team familiarity with the internals of the Wasp hypervisor, but would not create too much additional development time. Because there are future intentions for updates to the compiler extension that we aim to complete by June 2027, the additional development time that switching to MLIR would incur seems too high for our current scope.
+
+To verify that we have successfully made the switch to a newer version of LLVM, we will use the existing tests (see section "Running Virtine Tests" in [2]) for Wasp to confirm that Wasp retains all of its existing functionality. The number of tests passed gives us a metric showing how faithful this move has been to the original functionality of Wasp.
 
 ## Constraints
 
@@ -57,4 +59,15 @@ This is the currently proposed decision.
 
 ## References
 
-Every source the RFC cites, with a link where one exists.
+\[1]: [https://www.stephendiehl.com/posts/mlir_introduction/](https://www.stephendiehl.com/posts/mlir_introduction/)
+
+\[2]: [https://github.com/pithlessly/wasp/blob/main/README.md](https://github.com/pithlessly/wasp/blob/main/README.md)
+
+## Revsision Log
+
+| Source                         | Feedback                                                             | Decision | Where or Why                                                                                                                      |
+|--------------------------------|----------------------------------------------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------|
+| Samuel Vernick (Reviewer 1)    | Include a more precise verification plan with metrics.               | Changed  | Recommendation and Verification Plan: a description of the exact methods and metrics used for verification is now included.       |
+| Swathi Pappoppula (Reviewer 2) | Include compatibility and regression tests in the verification plan. | Changed  | Recommendation and Verification Plan: the existing compatibility and regression tests have been described and linked in the plan. |
+| Kirsten Winters (Instructor)   | Incorporate citations into the document.                             | Changed  | Added citations throughout document when they were relevant to claims made.                                                       |
+
