@@ -1,5 +1,5 @@
 
-# Sprint Note: Sprint 2, Supporting Separate Compilation with Virtines
+# Sprint Note: Sprint 3, Supporting Separate Compilation with Virtines
 
 **Team:** Supporting Separate Compilation with Virtines | **Sprint dates:** 10-26-2026 to 11-06-2026 | **Date submitted:** 11-07-2026
 
