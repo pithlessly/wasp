@@ -2,6 +2,8 @@ CMAKE_ROOT=$(shell pwd)
 BUILD:=build/
 VENV:=venv/
 CMAKE_PREFIX_PATH:=/usr/lib/llvm-10
+USR_LOCAL:=/usr/local
+VCC:=$(USR_LOCAL)/bin/vcc
 
 ifeq ($(BUILD_ENV), travis)
 	CMAKE_PREFIX_OPT:=-DCMAKE_PREFIX_PATH=$(CMAKE_PREFIX_PATH)
@@ -30,22 +32,22 @@ clean:
 	@rm -rf $(BUILD)
 
 install:
-	@mkdir -p /usr/local/lib/virtine
-	@mkdir -p /usr/local/include/wasp
-	@install -m 755 build/libwasp.so /usr/local/lib/libwasp.so
-	@install -m 755 include/virtine.h /usr/local/include/virtine.h
-	@install -m 755 -D include/wasp/* -t /usr/local/include/wasp/
-	@install -m 755 build/VirtinePass.so /usr/local/lib/virtine/VirtinePass.so
-	@install -m 755 build/libc.a /usr/local/lib/virtine/virtine_libc.a
-	@install -m 755 build/libm.a /usr/local/lib/virtine/virtine_libm.a
-	@install -m 755 pass/rt/boot64.asm /usr/local/lib/virtine/boot64.asm
-	@install -m 755 pass/rt/link64.ld /usr/local/lib/virtine/link64.ld
-	@install -m 755 pass/vcc /usr/local/bin/vcc
+	@mkdir -p $(USR_LOCAL)/lib/virtine
+	@mkdir -p $(USR_LOCAL)/include/wasp
+	@install -m 755 pass/vcc $(VCC)
+	@install -m 755 build/libwasp.so $(USR_LOCAL)/lib/libwasp.so
+	@install -m 755 include/virtine.h $(USR_LOCAL)/include/virtine.h
+	@install -m 755 -D include/wasp/* -t $(USR_LOCAL)/include/wasp/
+	@install -m 755 build/VirtinePass.so $(USR_LOCAL)/lib/virtine/VirtinePass.so
+	@install -m 755 build/libc.a $(USR_LOCAL)/lib/virtine/virtine_libc.a
+	@install -m 755 build/libm.a $(USR_LOCAL)/lib/virtine/virtine_libm.a
+	@install -m 755 pass/rt/boot64.asm $(USR_LOCAL)/lib/virtine/boot64.asm
+	@install -m 755 pass/rt/link64.ld $(USR_LOCAL)/lib/virtine/link64.ld
 
 
 
 smoketest:
-	@vcc test/smoketest.c -o build/smoketest
+	@$(VCC) test/smoketest.c -o build/smoketest
 	build/smoketest
 
 
@@ -66,7 +68,7 @@ build/fib.bin: test/fib/boot.asm test/fib/virtine.c
 
 
 build/http: test/http/http.c
-	@vcc -o $@ $<
+	@$(VCC) -o $@ $<
 
 
 build/jsv/%.c.o: test/js/rt/%.c
@@ -245,7 +247,7 @@ build/http_baseline: test/http/http.c
 	gcc -DBASELINE=1 -o $@ $<
 
 build/http_virtine: test/http/http.c
-	vcc -o $@ $<
+	$(VCC) -o $@ $<
 
 data/fig13/http_baseline_lat.csv: build/http_baseline
 	build/http_baseline -l > $@
