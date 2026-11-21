@@ -313,4 +313,4 @@ artifacts.tar: artifacts
 
 
 
-.PHONY: test $(ALLPLOTS) wasp
+.PHONY: test $(ALLPLOTS) wasp virtine_bins all clean install
